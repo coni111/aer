@@ -12,3 +12,5 @@ The logo, icons, and designs all of them are made by me (Coni), so please do not
 - 📑 RSS Weather Channel: https://www.met.hu/methu/rss/rss.php?categoryid=2
 
 - 🌐 HungaroMet weather database: https://odp.met.hu/
+
+![logo lines](https://github.com/user-attachments/assets/2bd01d59-b696-4ebd-94ff-b1036a344233)
