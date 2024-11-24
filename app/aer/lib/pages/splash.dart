@@ -65,7 +65,7 @@ class _BackgroundImagePageState extends State<BackgroundImagePage> with TickerPr
       Timer(const Duration(milliseconds: 2000), () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const WeatherPage()), // Replace with your destination page
+          MaterialPageRoute(builder: (context) => HomeScreen()), // Replace with your destination page
         );
       });
     }).catchError((error) {

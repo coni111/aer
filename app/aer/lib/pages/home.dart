@@ -1,256 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:aer/api_models/weather_model.dart';
-import 'package:aer/components/forecasting.dart';
 import 'package:aer/services/weather_service.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
-class WeatherPage extends StatefulWidget {
-  const WeatherPage({super.key});
-
+class HomeScreen extends StatefulWidget {
   @override
-  State<WeatherPage> createState() => _WeatherPageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _WeatherPageState extends State<WeatherPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final _weatherService = WeatherService('a10ef3b7410f0043ec659f036724025f');
+class _HomeScreenState extends State<HomeScreen> {
+  final WeatherService _weatherService = WeatherService();
+  String _city = 'Budapest';
+  Map<String, dynamic>? _weatherData;
 
-
-  Weather? _weather;
-
-  _fetchWeather() async {
-
-    String cityName = await _weatherService.getCurrentCity();
-
-    try {
-      final weather = await _weatherService.getWeather(cityName);
-      setState(() {
-        _weather = weather;
-      });
-    }
-
-    catch (e) {
-      print(e);
-    }
-  }
-
-  String translatedWeatherStatus = '';
-  String getWeatherAnimation(String? mainCondition) {
-      DateTime currentTime = DateTime.now();
-      int hour = currentTime.hour;
-
-      if (mainCondition == null) return 'lib/animations/LoadingAnimation.json';
-
-      switch (mainCondition.toLowerCase()) {
-        case 'clouds':
-        case 'mist':
-        case 'smoke':
-        case 'haze':
-        case 'dust':
-          translatedWeatherStatus = "Felhős";
-          return 'lib/animations/Cloudy.json';
-        case 'fog':
-          translatedWeatherStatus = "Köd";
-          return 'lib/animations/Fog.json';
-        case 'rain':
-        case 'driyyle':
-        case 'shower rain':
-          translatedWeatherStatus = "Esős";
-          return 'lib/animations/Rainy.json';
-        case 'thunderstorm':
-          translatedWeatherStatus = "Vihar";
-          return 'lib/animations/ThunderStorm.json';
-        case 'clear':
-          translatedWeatherStatus = "Tiszta égbolt";
-          if (hour >= 19) {return 'lib/animations/Moon.json';}
-          else {return 'lib/animations/Sunny.json';}
-        default:
-          translatedWeatherStatus = "";
-          return 'lib/animations/LoadingAnimation.json';
-      }
-    }
-  
   @override
   void initState() {
     super.initState();
     _fetchWeather();
   }
 
+  void _fetchWeather() async {
+    try {
+      final data = await _weatherService.fetchWeather(_city);
+      setState(() {
+        _weatherData = data;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(0, 255, 255, 255),
-      ),
-      home: Scaffold(
-    endDrawer: Drawer(
-        child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/images/login_background.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          children: [
-            Column(
-              children: [
-                const SizedBox(height: 40),
-                Container(
-                  alignment: Alignment.center,
-                  height: 130,
-                  child: Image.asset(
-                    'lib/images/logo_sidebar.png',
-                    width: 200,
-                    height: 200,
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-    
-            Row(
-              children: [
-    
-                SizedBox(width: 10),
-    
-                CircleAvatar(
-                  backgroundColor: const Color.fromARGB(255, 255, 187, 0),
-                  radius: 25.0,
-                ),
-    
-                SizedBox(width: 10),
-              ],
-            ),
-    
-            SizedBox(height: 10),
-    
-            ListTile(
-              leading: Icon(Icons.settings, size: 30, color: Color.fromARGB(255, 255, 187, 0),),
-              title: Text('Beállítások', style: TextStyle(fontSize: 15, color: Colors.white)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.contacts, size: 30, color: Color.fromARGB(255, 255, 187, 0),),
-              title: Text('Elérhetőségek', style: TextStyle(fontSize: 15, color: Colors.white)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.info, size: 30, color: Color.fromARGB(255, 255, 187, 0),),
-              title: Text('Információk', style: TextStyle(fontSize: 15, color: Colors.white)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.web, size: 30, color: Color.fromARGB(255, 255, 187, 0)),
-              title: Text('Weboldal', style: TextStyle(fontSize: 15, color: Colors.white)),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.facebook, size: 30, color: Color.fromARGB(255, 255, 187, 0),),
-              title: Text('Facebook', style: TextStyle(fontSize: 15, color: Colors.white)),
-              onTap: () {},
-            ),
-            Expanded(
-              child: Divider(
-                thickness:  0.5,
-                color: Color.fromARGB(0, 255, 255, 255)
+    return Scaffold(
+      body: _weatherData == null
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text('City: $_city', style: TextStyle(fontSize: 24)),
+                  Divider(),
+                  _currentWeather(),
+                  Divider(),
+                  _weatherForecast(),
+                ],
               ),
             ),
-            Text('''
-      Fishingline 2023-2024 Verzió: 1.2.8
-      Fejlesztette: nikkeisadev.
-            ''', style: TextStyle(fontSize: 15, color: Colors.white)),
-          ],
-        ),
-        ),
-      ),
-        body: Container(
-                decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("lib/images/windturbine_bg.png"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-          child: Center(
-            child: Column( 
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 0),
-                
-                Divider(
-                    thickness: 2,
-                    color: const Color.fromARGB(255, 255, 187, 0),
-                    indent: 110,
-                    endIndent: 110,
-                ),
-    
-                const SizedBox(height: 3),
-    
-                Text("Dátum, és idő:",
-                style: TextStyle(color: Colors.white, fontSize: 13),
-                ),
-    
-                //Text(
-                    //'${DateFormat('HH:mm').format(DateTime.now())}  '
-                    //'${DateFormat('yyyy.MM.dd').format(DateTime.now())}',
-                    //style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500), textAlign: TextAlign.center,
-                //),
-    
-                const SizedBox(height: 10),
-    
-                Text("Jelenlegi tartózkodási helyed:",
-                style: TextStyle(color: Colors.white, fontSize: 13),
-                ),
-    
-                const SizedBox(height: 20),
-                
-                Text(
-                    _weather?.cityName ?? "Adatok lekérése...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    background: Paint()
-                      ..color = const Color.fromARGB(255, 255, 187, 0)
-                      ..strokeWidth = 35
-                      ..strokeJoin = StrokeJoin.round
-                      ..strokeCap = StrokeCap.round
-                      ..style = PaintingStyle.stroke,
-                    color: Colors.white,
-                  ),
-                ),
-                
-                const SizedBox(height: 25),
-                Text("A Jelenlegi hőmérséklet:",
-                style: TextStyle(color: Colors.white, fontSize: 15),
-                ),
-    
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '${_weather?.temperature.round()}°C',
-                        style: TextStyle(fontSize: 40)
-                      ),
-                      const WidgetSpan(
-                        child: Icon(
-                          Icons.dew_point, 
-                          size: 40,
-                          color: const Color.fromARGB(255, 255, 187, 0),
-                          ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-       
-      ),
+    );
+  }
+
+  Widget _currentWeather() {
+    final current = _weatherData!['current'];
+    final sunrise = DateTime.fromMillisecondsSinceEpoch(current['sunrise'] * 1000);
+    final sunset = DateTime.fromMillisecondsSinceEpoch(current['sunset'] * 1000);
+    final avgTemp = (current['temp_min'] + current['temp_max']) / 2;
+    final weatherType = current['weather'][0]['main'].toLowerCase();
+    final weatherImages = {
+      'clear': 'lib/images/cloud.png',
+      'clouds': 'lib/images/clouds.png',
+      'rain': 'lib/images/storm.png',
+      'snow': 'lib/images/mist.png',
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.asset(weatherImages[weatherType] ?? 'lib/images/sun.png', width: 100, height: 100),
+        Text('Min Temp: ${current['temp_min'] ?? 'N/A'}°C'),
+        Text('Max Temp: ${current['temp_max'] ?? 'N/A'}°C'),
+        Text('Humidity: ${current['humidity'] ?? 'N/A'}%'),
+        Text('Weather: ${current['weather'][0]['description'] ?? 'N/A'}'),
+        Text('Wind Speed: ${current['wind_speed'] ?? 'N/A'} m/s'),
+        Text('Sunrise: ${DateFormat('hh:mm a').format(sunrise) ?? 'N/A'}'),
+        Text('Sunset: ${DateFormat('hh:mm a').format(sunset) ?? 'N/A'}'),
+        if (avgTemp < 7) Text('Recommended: Use winter tires'),
+        if (current['uvi'] > 7) Text('Warning: High UV index'),
+      ],
+    );
+  }
+
+  Widget _weatherForecast() {
+    final daily = _weatherData!['daily'];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('7-Day Forecast', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      ],
     );
   }
 }

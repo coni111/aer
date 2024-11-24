@@ -1,5 +1,5 @@
 name: aer
-description: "A new Flutter project."
+description: "Aer - Weather Application."
 
 publish_to: 'none'
 
@@ -17,7 +17,9 @@ dependencies:
   http: ^1.2.2
   geolocator: ^13.0.2
   geocoding: ^3.0.0
-  intl: ^0.19.0
+  intl: ^0.17.0
+  flutter_dotenv: ^5.0.2 
+  charts_flutter: ^0.11.0
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +34,9 @@ flutter:
     - lib/images/clouds_bg.png
     - lib/images/splash_screen_bg.png
     - lib/images/aer_logo.png
+    - lib/images/cloud.png
+    - lib/images/clouds.png
+    - lib/images/mist.png
+    - lib/images/sun.png
+    - lib/images/storm.png
+    - lib/assets/.env

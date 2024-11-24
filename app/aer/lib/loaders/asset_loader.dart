@@ -6,6 +6,11 @@ Future<void> preloadAssets(BuildContext context, Function(String) updateLoadingT
     'lib/images/clouds_bg.png',
     'lib/images/windturbine_bg.png',
     'lib/images/aer_logo.png',
+    'lib/images/cloud.png',
+    'lib/images/clouds.png',
+    'lib/images/storm.png',
+    'lib/images/mist.png',
+    'lib/images/sun.png',
     // Add other images or assets to preload here...
   ];
 
