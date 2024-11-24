@@ -15,7 +15,7 @@ class WeatherPage extends StatefulWidget {
 
 class _WeatherPageState extends State<WeatherPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final _weatherService = WeatherService('96a66d529a57a3ab69b4cd7cfb5cd421');
+  final _weatherService = WeatherService('a10ef3b7410f0043ec659f036724025f');
 
 
   Weather? _weather;
