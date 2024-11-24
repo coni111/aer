@@ -11,6 +11,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final WeatherService _weatherService = WeatherService();
   String _city = 'Budapest';
   Map<String, dynamic>? _weatherData;
+  String? _error;
 
   @override
   void initState() {
@@ -25,65 +26,55 @@ class _HomeScreenState extends State<HomeScreen> {
         _weatherData = data;
       });
     } catch (e) {
-      print(e);
+      setState(() {
+        _error = e.toString();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _weatherData == null
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text('City: $_city', style: TextStyle(fontSize: 24)),
-                  Divider(),
-                  _currentWeather(),
-                  Divider(),
-                  _weatherForecast(),
-                ],
-              ),
-            ),
+      appBar: AppBar(
+        title: Text('Weather App'),
+      ),
+      body: _error != null
+          ? Center(child: Text('Error: $_error'))
+          : _weatherData == null
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Text('City: $_city', style: TextStyle(fontSize: 24)),
+                      Divider(),
+                      _currentWeather(),
+                    ],
+                  ),
+                ),
     );
   }
 
   Widget _currentWeather() {
-    final current = _weatherData!['current'];
-    final sunrise = DateTime.fromMillisecondsSinceEpoch(current['sunrise'] * 1000);
-    final sunset = DateTime.fromMillisecondsSinceEpoch(current['sunset'] * 1000);
-    final avgTemp = (current['temp_min'] + current['temp_max']) / 2;
-    final weatherType = current['weather'][0]['main'].toLowerCase();
-    final weatherImages = {
-      'clear': 'lib/images/cloud.png',
-      'clouds': 'lib/images/clouds.png',
-      'rain': 'lib/images/storm.png',
-      'snow': 'lib/images/mist.png',
-    };
+    final main = _weatherData!['main'];
+    final weather = _weatherData!['weather'][0];
+    final wind = _weatherData!['wind'];
+    final sys = _weatherData!['sys'];
+    final sunrise = DateTime.fromMillisecondsSinceEpoch(sys['sunrise'] * 1000);
+    final sunset = DateTime.fromMillisecondsSinceEpoch(sys['sunset'] * 1000);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset(weatherImages[weatherType] ?? 'lib/images/sun.png', width: 100, height: 100),
-        Text('Min Temp: ${current['temp_min'] ?? 'N/A'}°C'),
-        Text('Max Temp: ${current['temp_max'] ?? 'N/A'}°C'),
-        Text('Humidity: ${current['humidity'] ?? 'N/A'}%'),
-        Text('Weather: ${current['weather'][0]['description'] ?? 'N/A'}'),
-        Text('Wind Speed: ${current['wind_speed'] ?? 'N/A'} m/s'),
-        Text('Sunrise: ${DateFormat('hh:mm a').format(sunrise) ?? 'N/A'}'),
-        Text('Sunset: ${DateFormat('hh:mm a').format(sunset) ?? 'N/A'}'),
-        if (avgTemp < 7) Text('Recommended: Use winter tires'),
-        if (current['uvi'] > 7) Text('Warning: High UV index'),
-      ],
-    );
-  }
-
-  Widget _weatherForecast() {
-    final daily = _weatherData!['daily'];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('7-Day Forecast', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text('Temperature: ${main['temp']}°C'),
+        Text('Min Temp: ${main['temp_min']}°C'),
+        Text('Max Temp: ${main['temp_max']}°C'),
+        Text('Humidity: ${main['humidity']}%'),
+        Text('Weather: ${weather['description']}'),
+        Text('Wind Speed: ${wind['speed']} m/s'),
+        Text('Sunrise: ${DateFormat('hh:mm a').format(sunrise)}'),
+        Text('Sunset: ${DateFormat('hh:mm a').format(sunset)}'),
+        if (main['temp'] < 7) Text('Recommended: Use winter tires'),
+        if (weather['uvi'] != null && weather['uvi'] > 7) Text('Warning: High UV index'),
       ],
     );
   }
