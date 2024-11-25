@@ -1,0 +1,16 @@
+Időjárás előrejelző asztali alkalmazás és weboldal készítése (Egyéni projekt)
+ - Tetszőleges ingyenes online időjárás API használatával
+ - Egyedi (akár AI generált) ikonokkal grafikusan megjelenítve
+ - Web: Csak kliens oldali technológiák használhatók
+        Az oldal legyen reszponzív! Bootstrap!
+ - Asztali alkalmazás: WPF. Reszponzív!
+ - Funkciók: Választható legyen a település
+             Az aktuális nap időjárása (min, max °C, páratartalom, időjárás jellege (napos, felhős, eső, hó, ...), szél, ...)
+             Napkelte, naplemente időpontja, ...
+             Ha az aktuális nap átlaghőmérséklete kisebb mint 7°C, akkor jelezze, hogy az autón ajánlott a téli gumi használata
+             Figyelmeztessen, ha az adott nap magas UV érték várható
+             A következő 7 nap időjárása (min, max, jelleg). Leolvasható legyen a trend a grafikus megjelenés alapján!
+             Ha valahol nem érhető el adat, akkor az "N/A" szöveg jelenjen meg!
+Elvárás: Folyamatos verziókövetés (Hiányában az értékelés max 3-as) Projekt tömörített állományban való feltöltése: 1
+         Minden IKT órán kötelező a projekten dolgozni és a munkát PUSHolni (Ha nincs akkor értékelem az órai munkát!)
+Határidő: 2024.11.26. 15:00 (Hosszabbításra lehetőség nincs!)
