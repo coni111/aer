@@ -13,7 +13,7 @@ Future<void> preloadAssets(BuildContext context, Function(String) updateLoadingT
     'lib/images/sun.png',
     'lib/images/storm_bg.png',
     'lib/images/snow_bg.png',
-    'lib/images/raing.png'
+    'lib/images/rain.png'
     // Add other images or assets to preload here...
   ];
 
@@ -24,6 +24,6 @@ Future<void> preloadAssets(BuildContext context, Function(String) updateLoadingT
 
 Future<void> _precacheImage(BuildContext context, String imagePath, Function(String) updateLoadingText) async {
   updateLoadingText(imagePath.split('/').last);
-  await Future.delayed(const Duration(milliseconds: 500)); // Adding a delay for the cooldown
+  await Future.delayed(const Duration(milliseconds: 500));
   await precacheImage(AssetImage(imagePath), context);
 }

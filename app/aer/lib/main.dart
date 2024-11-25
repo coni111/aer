@@ -4,10 +4,10 @@ import 'pages/splash.dart';
 import 'package:aer/pages/home.dart';
 
 Future<void> main() async {
-  // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  // Load environment variables
+
   await dotenv.load(fileName: ".env");
+  
   runApp(MyMainApplication());
 }
 

@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:aer/loaders/asset_loader.dart'; // Import the asset loader
-
+import 'package:flutter/material.dart';
+import 'package:aer/loaders/asset_loader.dart';
 import 'package:aer/pages/home.dart';
 
 class BackgroundImagePage extends StatefulWidget {
@@ -65,7 +64,7 @@ class _BackgroundImagePageState extends State<BackgroundImagePage> with TickerPr
       Timer(const Duration(milliseconds: 2000), () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()), // Replace with your destination page
+          MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       });
     }).catchError((error) {

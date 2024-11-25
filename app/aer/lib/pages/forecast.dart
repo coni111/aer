@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -32,7 +33,7 @@ class WeatherForecastPage extends StatelessWidget {
   String _getBackgroundImage(String weatherType) {
     switch (weatherType) {
       case 'Clear':
-        return 'lib/images/clear_bg.png';
+        return 'lib/images/windturbine_bg.png';
       case 'Clouds':
         return 'lib/images/clouds_bg.png';
       case 'Rain':
@@ -42,11 +43,11 @@ class WeatherForecastPage extends StatelessWidget {
       case 'Thunderstorm':
         return 'lib/images/thunderstorm_bg.png';
       case 'Drizzle':
-        return 'lib/images/drizzle_bg.png';
+        return 'lib/images/windturbine_bg.png';
       case 'Mist':
-        return 'lib/images/mist_bg.png';
+        return 'lib/images/mwindturbine_bg.png';
       default:
-        return 'lib/images/default_bg.png';
+        return 'lib/images/windturbine_bg.png';
     }
   }
 
@@ -77,40 +78,83 @@ class WeatherForecastPage extends StatelessWidget {
         ],
       ),
       endDrawer: Drawer(
-  child: Container(
-    color: const Color.fromARGB(255, 49, 80, 255), // Set the background color for the entire drawer
-    child: ListView(
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        DrawerHeader(
+        child: Container(
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 49, 80, 255), // Ensure the header has the same background color
+            color: Colors.transparent,
+            image: DecorationImage(
+              image: AssetImage('lib/images/clouds_bg.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('lib/images/aer_logo.png', height: 30),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset('lib/images/aer_logo.png', height: 30),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Quit',
+                      style: GoogleFonts.comfortaa(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.exit_to_app, color: Colors.white, size: 30),
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'GitHub',
+                      style: GoogleFonts.comfortaa(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.code, color: Colors.white),
+                      onPressed: () async {
+                        const url = 'https://github.com/coni111';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Aer is a weather app with modern design, made as a school project 🌦',
+                      style: GoogleFonts.comfortaa(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        ListTile(
-          leading: Icon(Icons.code, color: Colors.white),
-          title: Text('Github', style: GoogleFonts.comfortaa(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600),),
-          onTap: () async {
-            const url = 'https://github.com/coni111';
-            if (await canLaunch(url)) {
-              await launch(url);
-            } else {
-              throw 'Could not launch $url';
-            }
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Aer is a weather app with modern design, made as a school project 🌦', style: GoogleFonts.comfortaa(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600),),
-        ),
-      ],
-    ),
-  ),
-),
+      ),
+
+
 
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchWeather(),

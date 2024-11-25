@@ -10,16 +10,15 @@ class WeatherService {
       throw Exception('API key is not loaded properly');
     }
 
-    // Fallback coordinates for Budapest if location services are denied or there's an issue
     final fallbackCity = 'Budapest';
 
     final url = 'https://api.openweathermap.org/data/2.5/weather?q=${city.isEmpty ? fallbackCity : city}&appid=$apiKey&units=metric';
-    print('Request URL: $url'); // Debug
+    print('Request URL: $url');
 
     final response = await http.get(Uri.parse(url));
 
-    print('Response status: ${response.statusCode}'); // Debug
-    print('Response body: ${response.body}'); // Debug
+    print('Response status: ${response.statusCode}'); 
+    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
