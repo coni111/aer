@@ -11,6 +11,9 @@ Future<void> preloadAssets(BuildContext context, Function(String) updateLoadingT
     'lib/images/storm.png',
     'lib/images/mist.png',
     'lib/images/sun.png',
+    'lib/images/storm_bg.png',
+    'lib/images/snow_bg.png',
+    'lib/images/raing.png'
     // Add other images or assets to preload here...
   ];
 
