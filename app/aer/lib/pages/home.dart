@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 _city, // Assuming _city is defined and holds the city name
                 style: GoogleFonts.comfortaa(
-                  fontSize: 80, // Adjust size as needed
+                  fontSize: 70, // Adjust size as needed
                   color: const Color.fromARGB(0, 255, 255, 255).withOpacity(0.05), // Transparent white
                   fontWeight: FontWeight.w400,
                 ),
